@@ -15,10 +15,17 @@
 <meta property="og:site_name" content="GTrush的个人博客">
 <meta property="og:description" content="前两天使用投影仪的时候发现投影仪在开机后过几分钟就会自动停机并且 POWER 键红灯、TEMP 键绿灯闪烁，多次测试后依旧如此从而确定投影仪故障。此文记录了我维修投影仪的过程并提供一些资料为后续遇到这个问题的人提供一点方便。 故障原因我首先查阅了明基 w1070+的使用手册初步确定了我的 w1070+故障是由于某个风扇故障造成的。在确定是风扇问题后我联系了明基当地售后，描述了故障情况并询问维修价格">
 <meta property="og:image" content="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/%E6%98%8E%E5%9F%BA%E8%AF%B4%E6%98%8E%E4%B9%A6%E9%83%A8%E5%88%86.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/%E6%98%8E%E5%9F%BA%E6%8A%95%E5%BD%B1%E4%BB%AA%E5%B7%A5%E7%A8%8B%E6%A8%A1%E5%BC%8F.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/w1070+%E9%A3%8E%E6%89%87%E4%BD%8D%E7%BD%AE.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/w1070+%E7%81%AF%E6%B3%A1%E9%A3%8E%E6%89%87.jpeg">
+<meta property="og:image" content="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/%E8%BF%9B%E5%8F%A3%E9%A3%8E%E6%89%87%E7%85%A7%E7%89%87.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/LX%E9%A3%8E%E6%89%87%E6%8F%92%E5%A4%B4%E7%85%A7%E7%89%87.png">
 <meta property="article:published_time" content="2020-06-25T10:45:00.000Z">
-<meta property="article:modified_time" content="2020-06-25T11:37:14.042Z">
+<meta property="article:modified_time" content="2020-06-25T12:26:42.288Z">
 <meta property="article:author" content="GTrush">
-<meta property="article:tag" content="DIY, 明基W1070+, 投影仪， 维修">
+<meta property="article:tag" content="DIY">
+<meta property="article:tag" content="投影仪">
+<meta property="article:tag" content="维修">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/%E6%98%8E%E5%9F%BA%E8%AF%B4%E6%98%8E%E4%B9%A6%E9%83%A8%E5%88%86.png">
   
@@ -206,7 +213,14 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>前两天使用投影仪的时候发现投影仪在开机后过几分钟就会自动停机并且 POWER 键红灯、TEMP 键绿灯闪烁，多次测试后依旧如此从而确定投影仪故障。此文记录了我维修投影仪的过程并提供一些资料为后续遇到这个问题的人提供一点方便。</p>
-<h1 id="故障原因"><a href="#故障原因" class="headerlink" title="故障原因"></a>故障原因</h1><p>我首先查阅了明基 w1070+的使用手册初步确定了我的 w1070+故障是由于某个风扇故障造成的。<br><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/%E6%98%8E%E5%9F%BA%E8%AF%B4%E6%98%8E%E4%B9%A6%E9%83%A8%E5%88%86.png" alt=""><br>在确定是风扇问题后我联系了明基当地售后，描述了故障情况并询问维修价格，结果得到的回复却是说我的投影仪主板坏了需要 5 ～ 600 左右的维修费用，对于这种不负责任的判断和报价我十分生气遂决定自己维修。<br>由于明基 W1070+内部有四个风扇，确定具体是哪一个风扇成了一个大问题，从说明书上描述的四种指示灯情况猜测每一种情况应该对应一个风扇故障，所以有开始了漫长的找资料过程，最终在一个国外的论坛上找到了对应关系：<br>| 指示灯情况| 故障风扇| 风扇位置|<br>| —- | —- | —- |<br>| POWER 红灯常亮,TEMP 红灯常亮| 风扇 1| 灯泡风扇|<br>| POWER 红灯常亮,TEMP 红灯闪烁| 风扇 2| 电源风扇|<br>| POWER 红灯常亮,TEMP 绿灯常亮| 风扇 3| 涡轮风扇|<br>| POWER 红灯常亮,TEMP 绿灯闪烁| 风扇 4| 进口风扇|</p>
+<h1 id="故障原因"><a href="#故障原因" class="headerlink" title="故障原因"></a>故障原因</h1><p>我首先查阅了明基 w1070+的使用手册初步确定了我的 w1070+故障是由于某个风扇故障造成的。<br><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/%E6%98%8E%E5%9F%BA%E8%AF%B4%E6%98%8E%E4%B9%A6%E9%83%A8%E5%88%86.png" alt=""><br>在确定是风扇问题后我联系了明基当地售后，描述了故障情况并询问维修价格，结果得到的回复却是说我的投影仪主板坏了需要 5 ～ 600 左右的维修费用，对于这种不负责任的判断和报价我十分生气遂决定自己维修。<br>由于明基 W1070+内部有四个风扇，确定具体是哪一个风扇成了一个大问题，从说明书上描述的四种指示灯情况猜测每一种情况应该对应一个风扇故障，所以有开始了漫长的找资料过程，最终在一个国外的论坛上找到了对应关系：<br>| 指示灯情况| 故障风扇| 风扇位置|<br>| —- | —- | —- |<br>| POWER 红灯常亮,TEMP 红灯常亮| 风扇 1| 灯泡风扇|<br>| POWER 红灯常亮,TEMP 红灯闪烁| 风扇 2| 电源风扇|<br>| POWER 红灯常亮,TEMP 绿灯常亮| 风扇 3| 涡轮风扇|<br>| POWER 红灯常亮,TEMP 绿灯闪烁| 风扇 4| 进口风扇|<br>其实后来才知道除了通过灯光提示来判断风扇故障还有一个更加直接的方法，那就是进入投影仪的工程模式就可以直接看到故障内容，明基投影仪进入工程模式的方法为开机后按 menu 随后同时按住 source+enter 便可进入工程模式，其中第四个菜单中就就能看到对应的故障。<br><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/%E6%98%8E%E5%9F%BA%E6%8A%95%E5%BD%B1%E4%BB%AA%E5%B7%A5%E7%A8%8B%E6%A8%A1%E5%BC%8F.png" alt=""><br>从图上可以看到我的投影仪风扇 4 出现了故障，正常情况下所有的故障应该为 0，我的 fan4 对应为 5，也印证了前面表格中提到的故障位置。随后我用手电筒看了一下投影仪右侧进气口位置的风扇在开机后确实不转。<br>W1070+各个风扇位置如下图所示:<br><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/w1070+%E9%A3%8E%E6%89%87%E4%BD%8D%E7%BD%AE.png" alt=""></p>
+<h1 id="拆机"><a href="#拆机" class="headerlink" title="拆机"></a>拆机</h1><p>对于拆机，W1070+和 W1070 内部构造几乎完全一致，可以参考<a href="https://post.smzdm.com/p/415462/" target="_blank" rel="noopener">什么值得买 1</a>/<a href="https://post.smzdm.com/p/a25rppo7/" target="_blank" rel="noopener">什么只得买 2</a>和<a href="https://www.youtube.com/watch?v=BCAGhq_QYrA&t=555s" target="_blank" rel="noopener">youtube</a>上的详细的图文教程和视频。</p>
+<h1 id="风扇型号及选购"><a href="#风扇型号及选购" class="headerlink" title="风扇型号及选购"></a>风扇型号及选购</h1><p>通过拆机及网上资料，可以确定 w1070+的四个风扇型号分别如下：</p>
+<h2 id="风扇-1-灯泡风扇"><a href="#风扇-1-灯泡风扇" class="headerlink" title="风扇 1 灯泡风扇"></a>风扇 1 灯泡风扇</h2><p>w1070+灯泡风扇的型号为: AD07012DB257300<br><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/w1070+%E7%81%AF%E6%B3%A1%E9%A3%8E%E6%89%87.jpeg" alt=""></p>
+<h2 id="风扇-2-电源风扇-（注意，请仔细阅读）"><a href="#风扇-2-电源风扇-（注意，请仔细阅读）" class="headerlink" title="风扇 2 电源风扇 （注意，请仔细阅读）"></a>风扇 2 电源风扇 （注意，请仔细阅读）</h2><p>由于电源风扇被主板挡住了我维修时并未拆开，但是根据网上资料和 ebay 风扇套餐的说明来看，w1070+投影仪的电源风扇应该是和 w1070 才用同样的 AD0612HX-H93, 在拆机过程中看到该风扇是 3 针 3 孔的插头而不是进口风扇才用的 3 针 5 孔插头也从侧面印证了这一猜测。注意，此处为我自己的推断，实际情况还请读者自己斟酌，如果该风扇损坏建议读者先拆机确定型号再下单购买。</p>
+<h2 id="风扇-3-涡轮风扇"><a href="#风扇-3-涡轮风扇" class="headerlink" title="风扇 3 涡轮风扇"></a>风扇 3 涡轮风扇</h2><p>涡轮风扇我同样没拆开，但是比较明确的是涡轮风扇是和 w1070 相同的，型号为 BUB0512L。</p>
+<h2 id="风扇-4-进口风扇"><a href="#风扇-4-进口风扇" class="headerlink" title="风扇 4 进口风扇"></a>风扇 4 进口风扇</h2><p>我的投影仪就是这个风扇损坏了，这个风扇也是 w1070+和 w1070 唯一一个不同型号的风扇，该风扇的型号为 AD0612LX-H93。要注意购买时要确定是 3 针 5 孔的插头，我一开始购买时卖家就发了 3 针 3 孔的导致我浪费了大量的时间。风扇型号和插头照片如下:<br><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/%E8%BF%9B%E5%8F%A3%E9%A3%8E%E6%89%87%E7%85%A7%E7%89%87.png" alt=""><br><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/LX%E9%A3%8E%E6%89%87%E6%8F%92%E5%A4%B4%E7%85%A7%E7%89%87.png" alt=""></p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>总的来说明基 w1070+这款投影仪虽然有风扇容易损坏的通病，但是比较容易损坏的灯泡风扇和进口风扇更换还是相对容易的，只要胆大心细应该很容易完成。需要注意的是打开灯泡盖板后里面贴的透明塑料薄膜最好不要扔掉，如果不贴回破坏投影仪内部的冷却风道，我一开始测试时没有贴发现灯泡温度到了 340 度，比贴后高了整整 20 度。其次是投影仪需要完全盖上盖子后才能开机，换好风扇后插电没有反应不用着急，盖上盖子就好了，这应该是投影仪内置的某种保护形式造成的。</p>
 
       
 
@@ -251,7 +265,15 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">DIY, 明基W1070+, 投影仪， 维修</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">DIY</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">投影仪</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">维修</a>
         		</li>
       		
 		</ul>
@@ -364,7 +386,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#故障原因"><span class="toc-number">1.</span> <span class="toc-text">故障原因</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#故障原因"><span class="toc-number">1.</span> <span class="toc-text">故障原因</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#拆机"><span class="toc-number">2.</span> <span class="toc-text">拆机</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#风扇型号及选购"><span class="toc-number">3.</span> <span class="toc-text">风扇型号及选购</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#风扇-1-灯泡风扇"><span class="toc-number">3.1.</span> <span class="toc-text">风扇 1 灯泡风扇</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#风扇-2-电源风扇-（注意，请仔细阅读）"><span class="toc-number">3.2.</span> <span class="toc-text">风扇 2 电源风扇 （注意，请仔细阅读）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#风扇-3-涡轮风扇"><span class="toc-number">3.3.</span> <span class="toc-text">风扇 3 涡轮风扇</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#风扇-4-进口风扇"><span class="toc-number">3.4.</span> <span class="toc-text">风扇 4 进口风扇</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-number">3.5.</span> <span class="toc-text">后记</span></a></li></ol></li></ol>
                     </div>
                 </span>
             </div>
@@ -496,7 +518,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">DIY, 明基W1070+, 投影仪， 维修</a>
+                <a href="javascript:void(0)" class="js-tag color4">DIY</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">投影仪</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">维修</a>
               </li>
             
             <div class="clearfix"></div>
