@@ -180,6 +180,103 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-VScode-CMake调试c-代码" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/30/VScode-CMake%E8%B0%83%E8%AF%95c-%E4%BB%A3%E7%A0%81/">VScode+CMake调试C++代码</a>
+    </h1>
+  
+
+        
+        <a href="/2020/11/30/VScode-CMake%E8%B0%83%E8%AF%95c-%E4%BB%A3%E7%A0%81/" class="archive-article-date">
+  	<time datetime="2020-11-30T11:44:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>迁移到 MacOS 以后由于不想安装臃肿的 Vsiual Studio 所以转而使用轻量级的 VScode 作为 C++开发工具。切换开发工具后遇到的第一个问题就是如何方便的使用 VScode 调试 C++程序。本文以 Cmake 作为 C++编译工具，所以需要提前在根目录放好需要编译的源程序和写好的 CMakeLists.txt 文件。</p>
+<p>首先需要安装用于支持 CMake 的扩展： CMake Tools</p>
+<p>随后点击图标:<img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20201130195753.png" alt=""></p>
+<p>在 CMake Tools 中选择 Configure All Projects 按钮<img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20201130200221.png" alt=""></p>
+<p>此后会在 CMake Tools 中出现可以编译的项目名称并且 VScode 下面也会出现一行按钮（入下图所示），直接点击上面的 Build 即可构建项目，点击播放图标也能运行编译好的程序。<br><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20201130200452.png" alt=""><br>在项目上右键即可选择 debug 运行。</p>
+<p>为了更加方便的使用 VScode 自带的 debug 按钮或者改变项目运行目录，可以进行如下操作：</p>
+<ol>
+<li>在.vscode 目录新建 launch.json 并在其中输入以下模版文件(可以根据实际需要的运行目录对模版文件进行一定的修改)：</li>
+</ol>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"version"</span>: <span class="string">"0.2.0"</span>,</span><br><span class="line">    <span class="attr">"configurations"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"name"</span>: <span class="string">"(gdb) Launch"</span>,</span><br><span class="line">            <span class="attr">"type"</span>: <span class="string">"cppdbg"</span>,</span><br><span class="line">            <span class="attr">"request"</span>: <span class="string">"launch"</span>,</span><br><span class="line">            <span class="comment">// Resolved by CMake Tools:</span></span><br><span class="line">            <span class="attr">"program"</span>: <span class="string">"$&#123;command:cmake.launchTargetPath&#125;"</span>,</span><br><span class="line">            <span class="attr">"args"</span>: [],</span><br><span class="line">            <span class="attr">"stopAtEntry"</span>: <span class="literal">false</span>,</span><br><span class="line">            <span class="attr">"cwd"</span>: <span class="string">"$&#123;workspaceFolder&#125;"</span>,</span><br><span class="line">            <span class="attr">"environment"</span>: [</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="comment">// add the directory where our target was built to the PATHs</span></span><br><span class="line">                    <span class="comment">// it gets resolved by CMake Tools:</span></span><br><span class="line">                    <span class="attr">"name"</span>: <span class="string">"PATH"</span>,</span><br><span class="line">                    <span class="attr">"value"</span>: <span class="string">"$PATH:$&#123;command:cmake.getLaunchTargetDirectory&#125;"</span></span><br><span class="line">                &#125;,</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="attr">"name"</span>: <span class="string">"OTHER_VALUE"</span>,</span><br><span class="line">                    <span class="attr">"value"</span>: <span class="string">"Something something"</span></span><br><span class="line">                &#125;</span><br><span class="line">            ],</span><br><span class="line">            <span class="attr">"externalConsole"</span>: <span class="literal">true</span>,</span><br><span class="line">            <span class="attr">"MIMode"</span>: <span class="string">"gdb"</span>,</span><br><span class="line">            <span class="attr">"setupCommands"</span>: [</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="attr">"description"</span>: <span class="string">"Enable pretty-printing for gdb"</span>,</span><br><span class="line">                    <span class="attr">"text"</span>: <span class="string">"-enable-pretty-printing"</span>,</span><br><span class="line">                    <span class="attr">"ignoreFailures"</span>: <span class="literal">true</span></span><br><span class="line">                &#125;</span><br><span class="line">            ]</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>在对应的项目上右键选择 Set as Launch/Debug Target<img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20201130201432.png" alt=""></li>
+</ol>
+<p>此时即可像其它语言一样直接使用 VScode 自带的 debug 按钮进入到 debug 模式。</p>
+<p>通过这样的配置即可在 VScode 这样的 editor 里面享受到像 IDE 一样的便捷的 build 和 debug 操作了。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">VScode</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">CMake</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">C++</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/11/30/VScode-CMake%E8%B0%83%E8%AF%95c-%E4%BB%A3%E7%A0%81/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-明基W1070-投影仪风扇故障维修记" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -383,6 +480,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">维修</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">VScode</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">CMake</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">C++</a>
               </li>
             
             <div class="clearfix"></div>
