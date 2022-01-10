@@ -180,6 +180,123 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Qt调用open62541编写opcua程序的最简单方法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/01/09/Qt%E8%B0%83%E7%94%A8open62541%E7%BC%96%E5%86%99opcua%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%9C%80%E7%AE%80%E5%8D%95%E6%96%B9%E6%B3%95/">Qt调用open62541编写opcua程序的最简单方法</a>
+    </h1>
+  
+
+        
+        <a href="/2022/01/09/Qt%E8%B0%83%E7%94%A8open62541%E7%BC%96%E5%86%99opcua%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%9C%80%E7%AE%80%E5%8D%95%E6%96%B9%E6%B3%95/" class="archive-article-date">
+  	<time datetime="2022-01-09T06:20:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-01-09</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近由于需要编写 OPC UA 服务器和客户端便找到了搜索找到了 open62541 这个开源库,由于该开源库采用了 C99 和 C++ 98 的通用子集进行编写,因此可以十分方便的在使用 C++编写的 Qt 项目中调用该开源库编写需要的 server 或者 client 端.同时该开源库采用了 Mozilla Public License v2.0 开源许可证,该许可证比 GPL 许可证更加宽松,根据作者自己理解只要在不修改源代码的情况下可以自由的使用该开源库开发和发布私有软件(当然,如果确定要用于商业用途还是建议咨询专业的法律人士).</p>
+<p>由于目前网上关于在 Qt 中使用 open62541 的介绍还不多,现存的教程有的较为复杂或者没有涵盖完整的过程,因此我总结了一下我认为最为简单的在 Qt 中使用 open62541 的方法.</p>
+<h2 id="软件环境-仅列出作者测试过的环境"><a href="#软件环境-仅列出作者测试过的环境" class="headerlink" title="软件环境(仅列出作者测试过的环境)"></a>软件环境(仅列出作者测试过的环境)</h2><ul>
+<li>操作系统: windows 11、windows7</li>
+<li>C++编译器: visual studio 2015、visual studio 2019</li>
+<li>Qt 版本: qtcreator + qt5.15</li>
+<li>open62541 版本: v1.3-rc1</li>
+<li>其它工具: make(本文使用 cmake-gui)</li>
+</ul>
+<h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><p>进过测试,发现使用整合好的 open62541.c 和 open62541.h 文件的方式是在 Qt 项目中使用 open62541 最为简单的方式,因此本章主要介绍生成 open62541 整合文件和在 Qt 项目中调用整合好的文件.</p>
+<h3 id="1-整合文件的获取"><a href="#1-整合文件的获取" class="headerlink" title="1. 整合文件的获取"></a>1. 整合文件的获取</h3><p>整合文件的获取主要有两种方式:</p>
+<p>1.1. 官网下载</p>
+<p>直接在 open62541<a href="https://open62541.org/" target="_blank" rel="noopener">官网</a>首页中的<a href="https://open62541.org/releases/" target="_blank" rel="noopener">single file release</a>进行下载,但是这里的文件相对滞后, 截止到本文撰写时只能下载到 1.2 版的 open62541,而 github 上最新的版本已经到了 1.3-rc1</p>
+<p>1.2. 自行编译整合文件</p>
+<p>前面提到的官网下载的方法虽然很方便,但是你如果是一个像我一样追求最新版本的可以直接在官方的 github repo 的<a href="https://github.com/open62541/open62541/releases" target="_blank" rel="noopener">Releases 标签</a>直接下载最新版本的源码自行编译整合文件,具体操作步骤如下:</p>
+<p>1.2.1 通过 git clone 或者直接下载代码压缩文件的方式获取源代码,并在源代码文件夹中建立一个新的名为 build 的空文件夹,后续的编译等操作会在新建的文件夹中进行.本文使用编写时最新的 v1.3-rc1 版本进行演示.</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/%E4%B8%8B%E8%BD%BD%E5%A5%BD%E7%9A%84%E6%96%87%E4%BB%B6.png" alt=""></p>
+<p>1.2.2 在 cmake-gui 的 Browse Source…中选择下载好的代码的文件夹,同时在 Browse Build…中选择上一步中建立的 build 文件夹.随后点击 Configure 按钮.</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/cmake%E4%BD%BF%E7%94%A81.png" alt=""></p>
+<p>1.2.3 当 Configure 结束后会出现下图所示的画面,此处出现的参数可以根据 open62541 进行按需定制, 由于我们目前仅仅是先生成一个最基本的整合文件让我们的代码先跑起来,因此只需要确保勾选 UA_ENABLE_AMALGAMATION 选项即可.在勾选好对应选项后直接点击 Generate 按钮即可生成 Visual Studio 的 sln 文件.</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/cmake%E4%BD%BF%E7%94%A82.png" alt=""></p>
+<p>1.2.4 使用 Visual Studio 直接打开上一步中在 build 文件夹下生成的.sln 文件打开工程,然后直接在工程中右键选择 Build Solution 或者使用快捷键 Ctrl+Shift+B 即可.</p>
+<p>![](<a href="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/visual" target="_blank" rel="noopener">https://raw.githubusercontent.com/omegatao/FigureBed/master/img/visual</a> studio_build.png)</p>
+<p>1.2.5 当 Visual Studio 顺利执行完编译过程后即可在 build 文件夹中获得我们需要的整合文件 open62541.h 和 open62541.c 文件.</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/%E5%90%88%E5%B9%B6%E5%A5%BD%E7%9A%84%E6%96%87%E4%BB%B6.png" alt=""></p>
+<h3 id="2-在-Qt-中使用整合好的-open62541-文件"><a href="#2-在-Qt-中使用整合好的-open62541-文件" class="headerlink" title="2. 在 Qt 中使用整合好的 open62541 文件"></a>2. 在 Qt 中使用整合好的 open62541 文件</h3><p>通过第一步中的方式获得整合文件后,即可方便的在 Qt creator 的工程中调用 open62541 进行自己的工作.具体步骤如下:<br>2.1 首先按照往常的步骤建立 Qt 工程,本文使用 qmake 进行讲解.然后将整合好的两个文件拷贝到 Qt 工程目录中.</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/%E7%94%9F%E6%88%90%E5%A5%BD%E7%9A%84%E6%96%87%E4%BB%B6%E6%8B%B7%E8%B4%9D%E5%88%B0qt%E5%B7%A5%E7%A8%8B%E7%9B%AE%E5%BD%95%E4%B8%AD.png" alt=""></p>
+<p>2.2 在 pro 文件中添加两个刚拷贝过来的文件.<br><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/%E5%9C%A8pro%E6%96%87%E4%BB%B6%E4%B8%AD%E6%B7%BB%E5%8A%A0%E4%B8%A4%E4%B8%AA%E6%96%87%E4%BB%B6.png" alt=""><br>2.3 完成上述步骤后即可在 qt 工程中通过 #include “open6251.h”开始编写自己需要的服务器或者客户端了.为了演示效果, 本文中按照 open62541 的 git repo 中提供的 client 示例编写一个简单的客户端并连接一个测试用的服务器.<br>2.3.1 打开测试用服务器并获取服务器地址和端口, 建议大家可以去 prosys 注册并获取一个免费的 Prosys OPC UA Simulation Server. 安装并打开该软件后即可在首页获取 opc ua 模拟服务器的地址.<br>3.![](<a href="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/prosys" target="_blank" rel="noopener">https://raw.githubusercontent.com/omegatao/FigureBed/master/img/prosys</a> ua 服务器.png)</p>
+<p>2.3.2 按照 open62541 的 client 示例编写下图所示的代码并编译</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81.png" alt=""></p>
+<p>2.3.3 编译成功后即可获得下图所示的输出,表明我们成功在 Qt 项目中调用 open62541 并成功连接测试用服务器.</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/%E6%88%90%E5%8A%9F%E8%BF%9E%E6%8E%A5%E6%9C%8D%E5%8A%A1%E5%99%A8.png" alt=""></p>
+<h3 id="编译过程中可能遇到的问题"><a href="#编译过程中可能遇到的问题" class="headerlink" title="编译过程中可能遇到的问题"></a>编译过程中可能遇到的问题</h3><p>在 qt creator 中调用 open62541 整合文件可能会遇到一些问题,此处列举了作者遇到的一些问题和相应的解决方案</p>
+<ol>
+<li>LNK2019: 无法解析的外部符号 __WSAFDIsSet@8 等链接错误问题:</li>
+</ol>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%981.png" alt=""></p>
+<p>该问题是由于项目中没有指明在 windows 系统中依赖的 winsocket 库造成的,解决方案也十分简单,直接在 pro 中加入 <code>win32: LIBS += -lws2_32</code>这一行代码添加依赖的库即可.</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%981.png" alt=""></p>
+<ol start="2">
+<li>C2011: “sockaddr”: “struct”类型重定义错误问题:<br><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220110173012.png" alt=""><br>这个问题是在使用 Visual Studio 2015 在 win7 系统下遇到的,通过查找资料发现应该是 open62541 的在引入头文件时造成了#include &lt;winsocks2.h&gt; 和 #include &lt;windows.h&gt;两个头文件顺序的错误.<br>在 qtcreator 中解决该问题有两个办法:</li>
+<li>在 pro 文件中添加 <code>win32: DEFINES += _WINSOCKAPI_</code></li>
+<li>在 pro 文件中添加 <code>win32: DEFINES += WIN32_LEAN_AND_MEAN</code><br>如下图所示,个人更加倾向于使用第二种方法,这样还可以防止引入一些其它的不必要的依赖.<br><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220110173743.png" alt=""></li>
+</ol>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">C++ Qt open62541 opcua</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/01/09/Qt%E8%B0%83%E7%94%A8open62541%E7%BC%96%E5%86%99opcua%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%9C%80%E7%AE%80%E5%8D%95%E6%96%B9%E6%B3%95/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-VScode-CMake调试c-代码" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -377,7 +494,7 @@
   <div class="outer">
     <div id="footer-info">
       <div class="footer-left">
-        &copy; 2020 GTrush
+        &copy; 2022 GTrush
       </div>
       <div class="footer-right">
         <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
@@ -492,6 +609,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">C++</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">C++ Qt open62541 opcua</a>
               </li>
             
             <div class="clearfix"></div>
