@@ -180,6 +180,224 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-新手Gentoo折腾记录1-安装篇-二进制kernel快速安装方法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/12/%E6%96%B0%E6%89%8BGentoo%E6%8A%98%E8%85%BE%E8%AE%B0%E5%BD%951-%E5%AE%89%E8%A3%85%E7%AF%87-%E4%BA%8C%E8%BF%9B%E5%88%B6kernel%E5%BF%AB%E9%80%9F%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95/">新手Gentoo折腾记录1-安装篇(二进制kernel快速安装方法)</a>
+    </h1>
+  
+
+        
+        <a href="/2022/06/12/%E6%96%B0%E6%89%8BGentoo%E6%8A%98%E8%85%BE%E8%AE%B0%E5%BD%951-%E5%AE%89%E8%A3%85%E7%AF%87-%E4%BA%8C%E8%BF%9B%E5%88%B6kernel%E5%BF%AB%E9%80%9F%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95/" class="archive-article-date">
+  	<time datetime="2022-06-12T13:31:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-06-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>作为一个debian系发行版的老用户,之前一直使用mint和ubuntu两个发行版.但是最近由于原来安装系统的固态硬盘损坏,所以打算重装一个系统顺便换一个linux发行版试试看.之前之一听说像Arch和Gentoo这样的滚动发行版(rolling release distribution)可以时刻保持系统软件是最新的,一次安装之后只需要考虑进行系统更新即可.之所以选择Gentoo而不是Arch是因为根据我所了解到的信息Gentoo 可以使同一个软件的不同版本同时存在,这对于作为开发环境来说是十分吸引人的(主要是之前使用 ubuntu server 安装高版本python感觉是在是有点折腾).</p>
+<p>本文的目的是记录我初次安装Gentoo的步骤,主要参考了yangmame的博客、Houge_Langley和Jaus_Hwang两位up主的视频教程,以及最重要的官方的Handbook. 这些参考源的信息将在文末给出对应的链接🔗.后续应该还会根据我的具体使用情况更新这个系列,包括GUI的安装、开发环境搭建等.</p>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>迫于篇幅和本人能力,此安装步骤涉及以下条件,如果你的安装条件与我有差异请谨慎参考并且自行变通.</p>
+<ol>
+<li>本文使用x86_64实体机进行安装;</li>
+<li>本安装步骤以GPT分区uefi引导启动;</li>
+<li>安装时间估算及部分编译选项是在ryzen 3950x下得倒的.</li>
+<li>本文使用systemd而非openrc,以后GUI计划使用KDE plasma.</li>
+<li>本文过程不对kernel进行调整和编译,直接使用二进制发行版,如果这部分有需求建议观看Houge_Langley的视频教程对应部分.</li>
+</ol>
+<h1 id="准备安装盘"><a href="#准备安装盘" class="headerlink" title="准备安装盘"></a>准备安装盘</h1><p>如果你本身已经又一个能够正常运行的linux系统就不需要准备安装盘了,但是如果你电脑上本身没有安装好的linux系统则需要使用livecd的镜像来制作安装盘.理论上所有发行版的livecd都可以用来安装Gentoo系统,我本人是通过<a href="https://www.gentoo.org/downloads/" target="_blank" rel="noopener">Gentoo官方livecd</a>下载安装的,如果使用官方的livecd推荐下载下图所示的带GUI的版本,这样方便复制和粘贴命令,同时遇到不懂得问题也方便查找资料.</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220612121542.png" alt=""></p>
+<p>如果是windows系统可以使用UltraISO或者Rufus这样的工具将ISO文件刻录到优盘.</p>
+<p>如果你和我一样使用的Mac,那么可以直接使用mac自带的cli工具diskutil制作启动优盘.详细步骤这里就不再赘述了,需要的可以参考此链接<a href="https://www.jianshu.com/p/826dc5445b75" target="_blank" rel="noopener">MacOS 制作 USB 启动盘</a>.</p>
+<h1 id="准备磁盘"><a href="#准备磁盘" class="headerlink" title="准备磁盘"></a>准备磁盘</h1><h2 id="磁盘分区"><a href="#磁盘分区" class="headerlink" title="磁盘分区"></a>磁盘分区</h2><p>首先使用<code>lsblk</code>命令查看磁盘结构,本文将在下图所示的nvme固态硬盘中进行安装.</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220612174954.png" alt=""></p>
+<p>可以看到上面的固态硬盘还没有分区,因此需要先进行分区.你可以使用任何熟悉的分区工具,个人比较推荐带有CUI界面的的cfdisk.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cfdisk /dev/nvme0n1</span><br></pre></td></tr></table></figure>
+
+<p>由于我不需要单独把/home 和/opt挂载到单独的分区上,因此只分了一个用于挂载/boot的分区和一个用于挂载/root的分区.官方Handbook建议是/boot分区200M即可,为了保险我设置了500M.最终分区效果如下图所示:</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220612184908.png" alt=""></p>
+<h2 id="磁盘格式化"><a href="#磁盘格式化" class="headerlink" title="磁盘格式化"></a>磁盘格式化</h2><p>对于/boot分区使用下面的命令格式化成vfat格式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mkfs.vfat -F32 /dev/nvme0n1p1</span><br></pre></td></tr></table></figure>
+
+<p>对于/root分区和别的分区可以根据你的需求进行选择比如ext4、btrfs等, 我是采用的btrfs分区格式所以用下面的命令进行格式化:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mkfs.btrfs /dev/nvme0n1p2</span><br></pre></td></tr></table></figure>
+
+<h2 id="挂载分区"><a href="#挂载分区" class="headerlink" title="挂载分区"></a>挂载分区</h2><p>这里可以直接将/boot和/root分区挂载上去,后面就不需要进行挂载了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir /mnt/gentoo</span><br><span class="line">sudo mount /dev/nvme0n1p2 /mnt/gentoo</span><br><span class="line">sudo mkdir /mnt/gentoo/boot</span><br><span class="line">sudo mount /dev/nvme0n1p1 /mnt/gentoo/boot</span><br></pre></td></tr></table></figure>
+
+<p>挂载好后通过lsblk确认分区挂载成功,对应效果如下图所示:</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220612190206.png" alt=""></p>
+<h1 id="安装stage3"><a href="#安装stage3" class="headerlink" title="安装stage3"></a>安装stage3</h1><p>首先进入之前挂载好的gentoo文件夹</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /mnt/gentoo</span><br></pre></td></tr></table></figure>
+
+<h2 id="下载并解压stage3文件"><a href="#下载并解压stage3文件" class="headerlink" title="下载并解压stage3文件"></a>下载并解压stage3文件</h2><p>然后通<code>wget</code>下载对应的stage3文件,这里推荐<a href="https://mirrors.ustc.edu.cn/gentoo/releases/amd64/autobuilds/" target="_blank" rel="noopener">中科大USTC镜像站</a>,由于本文选取systemd所以通过如下命令下载的对应版本文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo wget https://mirrors.ustc.edu.cn/gentoo/releases/amd64/autobuilds/current-stage3-amd64-desktop-systemd/stage3-amd64-desktop-systemd-20220605T170549Z.tar.xz</span><br></pre></td></tr></table></figure>
+
+<p>解压stage3压缩包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo tar xpvf stage3-*.tar.xz --xattrs-include=<span class="string">'*.*'</span> --numeric-owner</span><br></pre></td></tr></table></figure>
+
+<p>解压后就会在gentoo目录下生成好linux的树状目录了</p>
+<h2 id="配置make-conf文件"><a href="#配置make-conf文件" class="headerlink" title="配置make.conf文件"></a>配置make.conf文件</h2><p>通过vim编辑make.conf文件,如果你习惯使用nano编辑文本文件将下面的vim替换为nano即可:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim etc/portage/make.conf</span><br></pre></td></tr></table></figure>
+
+<p>可以参考我的make.conf进行修改,具体作用可以看注释</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># These settings were set by the catalyst build script that automatically </span></span><br><span class="line"><span class="comment"># built this stage. </span></span><br><span class="line"><span class="comment"># Please consult /usr/share/portage/config/make.conf.example for a more </span></span><br><span class="line"><span class="comment"># detailed example. </span></span><br><span class="line"></span><br><span class="line"><span class="comment"># GCC编译配置 -O3代表优化级别,如果采用更高的-Ofast可能会导致部分软件包编译错误, -march=native代表为本机cpu进行编译,如果是交叉编译需要去掉</span></span><br><span class="line"><span class="attr">COMMON_FLAGS</span>=<span class="string">"-march=native -O3 -pipe"</span> </span><br><span class="line"><span class="attr">CFLAGS</span>=<span class="string">"$&#123;COMMON_FLAGS&#125;"</span> </span><br><span class="line"><span class="attr">CXXFLAGS</span>=<span class="string">"$&#123;COMMON_FLAGS&#125;"</span> </span><br><span class="line"><span class="attr">FCFLAGS</span>=<span class="string">"$&#123;COMMON_FLAGS&#125;"</span> </span><br><span class="line"><span class="attr">FFLAGS</span>=<span class="string">"$&#123;COMMON_FLAGS&#125;"</span> </span><br><span class="line"><span class="attr">CPU_FLAGS_X86</span>=<span class="string">"aes avx avx2 f16c fma3 mmx mmxext pclmul popcnt rdrand sha sse sse2 sse3 sse4_1 sse4_2 sse4a ssse3"</span> </span><br><span class="line"> </span><br><span class="line"><span class="comment"># <span class="doctag">NOTE:</span> This stage was built with the bindist Use flag enabled </span></span><br><span class="line"><span class="attr">PORTDIR</span>=<span class="string">"/var/db/repos/gentoo"</span> </span><br><span class="line"><span class="attr">DISTDIR</span>=<span class="string">"/var/cache/distfiles"</span> </span><br><span class="line"><span class="attr">PKGDIR</span>=<span class="string">"/var/cache/binpkgs"</span> </span><br><span class="line"> </span><br><span class="line"><span class="comment"># This sets the language of build output to English. </span></span><br><span class="line"><span class="comment"># Please keep this setting intact when reporting bugs. </span></span><br><span class="line"><span class="attr">LC_MESSAGES</span>=C </span><br><span class="line"> </span><br><span class="line"><span class="comment"># 根据yangmame介绍添加,暂时我也不是很明白这是什么意思 </span></span><br><span class="line"><span class="attr">USE</span>=<span class="string">"-bindist"</span> </span><br><span class="line"> </span><br><span class="line"><span class="comment">#设置镜像站使用 USTC </span></span><br><span class="line"><span class="attr">GENTOO_MIRRORS</span>=<span class="string">"https://mirrors.ustc.edu.cn/gentoo/"</span> </span><br><span class="line"><span class="comment">#接受所有license类型,如果不这样可能会在emerge中因为license类型报错</span></span><br><span class="line"><span class="attr">ACCEPT_LICENSE</span>=<span class="string">"*"</span> </span><br><span class="line"> </span><br><span class="line"><span class="comment"># 并线编译线程数,根据cpu线程数和内存大小/2中较小的 </span></span><br><span class="line"><span class="attr">MAKEOPTS</span>=<span class="string">"-j32"</span> </span><br><span class="line"> </span><br><span class="line"><span class="comment"># --keep-going 遇到错误直接忽略开始下一个编译, --with-bdeps编译依赖</span></span><br><span class="line"><span class="attr">EMERGE_DEFAULT_OPTS</span>=<span class="string">"--keep-going --with-bdeps=y"</span> </span><br><span class="line"><span class="comment"># FEATURES="$&#123;FEATURES&#125; -userpriv -usersandbox -sandbox" </span></span><br><span class="line"><span class="comment"># 作为开发及设置,家用娱乐可以不设置</span></span><br><span class="line"><span class="attr">ACCEPT_KEYWORDS</span>=<span class="string">"~amd64"</span> </span><br><span class="line"><span class="comment"># 语言设置</span></span><br><span class="line"><span class="attr">L10N</span>=<span class="string">"en-US zh-CN en zh"</span> </span><br><span class="line"><span class="attr">LINGUAS</span>=<span class="string">"en_US zh_CN en zh"</span> </span><br><span class="line"><span class="comment"># 只有英伟达显卡这样设置,如果还有核显的话可以参照之前提到的资料添加对应测参数</span></span><br><span class="line"><span class="attr">VIDEO_CARDS</span>=<span class="string">"nvidia"</span> </span><br><span class="line"> </span><br><span class="line"><span class="comment"># 使用grub + efi引导</span></span><br><span class="line"><span class="attr">RUB_PLATFORMS</span>=<span class="string">"efi-64"</span></span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是CPU_FLAGS_X86这个参数,需要根据自己的cpu具体型号确定.这里可以通过下面的命令安装cpuid2cpuflags自动输出支持的指令集</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">emerge --ask app-portage/cpuid2cpuflags</span><br><span class="line">cpuid2cpuflags</span><br></pre></td></tr></table></figure>
+
+<p>获得的指令集如下图所示:</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220612200024.png" alt=""></p>
+<h2 id="配置portage源"><a href="#配置portage源" class="headerlink" title="配置portage源"></a>配置portage源</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir --parents /mnt/gentoo/etc/portage/repos.conf</span><br><span class="line">sudo vim /mnt/gentoo/etc/portage/repos.conf/gentoo.conf</span><br></pre></td></tr></table></figure>
+
+<p>其中gentoo.conf文件中配置为USTC的源,具体内容如下:</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[DEFAULT]</span></span><br><span class="line"><span class="attr">main-repo</span> = gentoo</span><br><span class="line"></span><br><span class="line"><span class="section">[gentoo]</span></span><br><span class="line"><span class="attr">location</span> = /usr/portage</span><br><span class="line"><span class="attr">sync-type</span> = rsync</span><br><span class="line"><span class="attr">sync-uri</span> = rsync://rsync.mirrors.ustc.edu.cn/gentoo-portage/</span><br><span class="line"><span class="attr">auto-sync</span> = <span class="literal">yes</span></span><br></pre></td></tr></table></figure>
+<h1 id="安装基本文件"><a href="#安装基本文件" class="headerlink" title="安装基本文件"></a>安装基本文件</h1><h2 id="复制DNS信息"><a href="#复制DNS信息" class="headerlink" title="复制DNS信息"></a>复制DNS信息</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cp --dereference /etc/resolv.conf /mnt/gentoo/etc/</span><br></pre></td></tr></table></figure>
+
+<h2 id="挂载必要的文件系统"><a href="#挂载必要的文件系统" class="headerlink" title="挂载必要的文件系统"></a>挂载必要的文件系统</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo mount --types proc /proc /mnt/gentoo/proc</span><br><span class="line">sudo mount --rbind /sys /mnt/gentoo/sys</span><br><span class="line">sudo mount --make-rslave /mnt/gentoo/sys</span><br><span class="line">sudo mount --rbind /dev /mnt/gentoo/dev</span><br><span class="line">sudo mount --make-rslave /mnt/gentoo/dev</span><br><span class="line">sudo mount --<span class="built_in">bind</span> /run /mnt/gentoo/run</span><br><span class="line">sudo mount --make-slave /mnt/gentoo/run</span><br></pre></td></tr></table></figure>
+
+<p>其中带有 –make-rslave的项目是使用systemd才需要的,如果你使用openrc可以不用运行.</p>
+<p>需要注意的是,如果你不使用Gentoo的livecd的话,需要运行下面的命令让/dev/shm/目录称为一个正常挂载的tmpfs</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">test</span> -L /dev/shm &amp;&amp; rm /dev/shm &amp;&amp; mkdir /dev/shm</span><br><span class="line">mount --types tmpfs --options nosuid,nodev,noexec shm /dev/shm</span><br><span class="line">chmod 1777 /dev/shm /run/shm <span class="comment">#如果报错则去掉 /run/shm部分</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="chroot"><a href="#chroot" class="headerlink" title="chroot"></a>chroot</h2><p>做好上面的准备以后就可以chroot了,运行下面的命令进行chroot并同步</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo chroot /mnt/gentoo/ /bin/bash</span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br><span class="line"><span class="built_in">export</span> PS1=<span class="string">"(chroot) <span class="variable">$&#123;PS1&#125;</span>"</span> <span class="comment">#此行命令没有实际作用,主要是在prompt提示你在chroot环境下</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="配置Portage"><a href="#配置Portage" class="headerlink" title="配置Portage"></a>配置Portage</h2><p>推荐使用快照的方式进行更新(速度快):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">emerge-webrsync</span><br></pre></td></tr></table></figure>
+
+<p>如果上面的方式失败或者你有别的方面的考虑可以使用下面的命令更新(速度慢):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">emerge --sync</span><br></pre></td></tr></table></figure>
+
+<h2 id="选择配置文件"><a href="#选择配置文件" class="headerlink" title="选择配置文件"></a>选择配置文件</h2><p>通过下列命令列出并选择你需要的profile模块</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">eselect profile list</span><br><span class="line">eselect profile <span class="built_in">set</span> X <span class="comment">#其中X代表你需要的profile</span></span><br></pre></td></tr></table></figure>
+
+<p>由于我需要的是KDE桌面并且使用systemd,所以我选择了下图中9这个profile</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220612203947.png" alt=""></p>
+<h2 id="第一次更新"><a href="#第一次更新" class="headerlink" title="第一次更新"></a>第一次更新</h2><p>接下来就是漫长的第一次更新了,我的3950x大概需要一小时左右,主要是看cpu的速度决定的:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">emerge -auvDN --with-bdeps=y @world</span><br></pre></td></tr></table></figure>
+
+<p>在第一次更新完成后反复运行下面的命令,直至确认没有更新之后在执行后续的步骤</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">emerge @preserved-rebuild</span><br><span class="line">perl-cleaner --all</span><br><span class="line">emerge -auvDN --with-bdeps=y @world</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置时区和地区信息"><a href="#配置时区和地区信息" class="headerlink" title="配置时区和地区信息"></a>配置时区和地区信息</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"Asia/Shanghai"</span> &gt; /etc/timezone</span><br><span class="line">emerge --config sys-libs/timezone-data</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"en_US.UTF-8 UTF-8 zh_CN.UTF-8 UTF-8"</span> &gt;&gt; /etc/locale.gen</span><br><span class="line">locale-gen</span><br></pre></td></tr></table></figure>
+
+<p>接下来可以选择语言,为了方便排除错误建议选者英文,一面出现中文无法显示出来方框的问题</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">eselect locale list</span><br><span class="line">eselect locale <span class="built_in">set</span> X <span class="comment"># X换成上面命令显示的序号</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220612204609.png" alt=""></p>
+<p>同步环境</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">. /etc/profile</span><br></pre></td></tr></table></figure>
+
+<p>重新加载环境</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">env-update &amp;&amp; <span class="built_in">source</span> /etc/profile &amp;&amp; <span class="built_in">export</span> PS1=<span class="string">"(chroot) <span class="variable">$&#123;PS1&#125;</span>"</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="安装内核"><a href="#安装内核" class="headerlink" title="安装内核"></a>安装内核</h1><p>这里就是和yangmame和Houge_Langley的教程区别最大的地方,这里采用了Jaus_Hwang提到的直接使用二进制发行kernel的方式,这样不但免去了繁琐的配置和编译kernel的步骤,节省时间和精力.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">emerge --ask sys-kernel/gentoo-kernel-bin</span><br><span class="line">emerge --depclean</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置系统"><a href="#配置系统" class="headerlink" title="配置系统"></a>配置系统</h1><h2 id="配置fstab"><a href="#配置fstab" class="headerlink" title="配置fstab"></a>配置fstab</h2><p>新手为了省事可以使用脚本自动生成一个fstab以免手残弄错</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget https://raw.githubusercontent.com/YangMame/Gentoo-Installer/master/genfstab</span><br><span class="line">chmod +x genfstab</span><br><span class="line"><span class="comment">#可选 cp genfstab /usr/bin/</span></span><br><span class="line">./genfstab / &gt; /etc/fstab</span><br><span class="line">nano /etc/fstab <span class="comment">#最好检查下此文件,删掉无用挂载点,并且可以根据需求将/tmp和/var/tmp挂载到内存</span></span><br></pre></td></tr></table></figure>
+
+<p>如果你的内存够大的话,推荐在生成好fstab后在后面按照Houge_Langley的方法将/tmp和/var/tmp两个目录自动挂载到内存中,这样不但可以提高速度,还能省去以后编译软件时对于固态硬盘寿命的损耗.具体的方式是在自动生成的fstab后面添加下面两列内容</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tmpfs /tmp tmpfs size=32G,noatime 0 0</span><br><span class="line">tmpfs /var/tmp tmpfs size=8G,noatime 0 0</span><br></pre></td></tr></table></figure>
+
+<p>其中具体的大小要根据你实际的内存大小来确定,具体内容如下图所示:</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220612205806.png" alt=""></p>
+<h2 id="安装并启动dhcpcd"><a href="#安装并启动dhcpcd" class="headerlink" title="安装并启动dhcpcd"></a>安装并启动dhcpcd</h2><p>安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">emerge --ask net-misc/dhcpcd</span><br></pre></td></tr></table></figure>
+
+<p>启动</p>
+<p>如果是用的openrc可以用如下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rc-update add dhcpcd default</span><br><span class="line">rc-service dhcpcd start</span><br></pre></td></tr></table></figure>
+
+<p>如果你和我一样使用systemd则使用下面的命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> --now dhcpcd</span><br></pre></td></tr></table></figure>
+
+<h2 id="确认系统安装正确-仅适用于systemd"><a href="#确认系统安装正确-仅适用于systemd" class="headerlink" title="确认系统安装正确(仅适用于systemd)"></a>确认系统安装正确(仅适用于systemd)</h2><p>对于systemd来说直接运行下面的命令后根据提示进行设置即可</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemd-firstboot --prompt --setup-machine-id</span><br></pre></td></tr></table></figure>
+
+<h2 id="设置root密码"><a href="#设置root密码" class="headerlink" title="设置root密码"></a>设置root密码</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">passwd</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是Gentoo默认的安全级别比较高,需要比较复杂的密码才能通过.</p>
+<h1 id="配置系统引导GRUB"><a href="#配置系统引导GRUB" class="headerlink" title="配置系统引导GRUB"></a>配置系统引导GRUB</h1><p>如果之前已经按照本文在make.conf中加入了GRUB_PLATFORMS=”efi-64”并且使用efi引导,则直接运行下面的命令即可</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">emerge --ask --verbose sys-boot/grub</span><br><span class="line">grub-install --target=x86_64-efi --efi-directory=/boot</span><br></pre></td></tr></table></figure>
+
+<p>运行上面的命令后正常情况下应该弹出如下图所示的提示</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220612212200.png" alt=""></p>
+<p>生成grub配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grub-mkconfig -o /boot/grub/grub.cfg</span><br></pre></td></tr></table></figure>
+
+<h1 id="最终步骤"><a href="#最终步骤" class="headerlink" title="最终步骤"></a>最终步骤</h1><p>现在其实就可以直接重启了,但是建议重启前进行检查,比如/boot目录里面是否有应该存在的内容一类的.确认无误后就可以执行以下操作重启计算机进入系统了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">exit</span> <span class="comment">#推出chroot环境</span></span><br><span class="line">sudo reboot</span><br></pre></td></tr></table></figure>
+
+<p>如果没有问题那么重启后就可以正常进入安装好的Gentoo系统了:</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220612212916.png" alt=""></p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a href="https://blog.yangmame.org/Gentoo%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.html" target="_blank" rel="noopener">yangmame的Gentoo安装教程</a></p>
+<p><a href="https://www.bilibili.com/video/BV1Eh411R7JX" target="_blank" rel="noopener">Houge_Langley 乐享 Linux 生活第五期，再谈 Gentoo Linux，从安装到初体验</a></p>
+<p><a href="https://www.bilibili.com/video/BV1nS4y1j7Uw" target="_blank" rel="noopener">Jaus_Hwang 最快的Gentoo Linux安装思路!</a></p>
+<p><a href="https://wiki.gentoo.org/wiki/Handbook:AMD64/zh-cn" target="_blank" rel="noopener">Gentoo Handbook AMD64</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Gentoo</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/06/12/%E6%96%B0%E6%89%8BGentoo%E6%8A%98%E8%85%BE%E8%AE%B0%E5%BD%951-%E5%AE%89%E8%A3%85%E7%AF%87-%E4%BA%8C%E8%BF%9B%E5%88%B6kernel%E5%BF%AB%E9%80%9F%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Qt调用open62541编写opcua程序的最简单方法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -613,6 +831,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">C++ Qt open62541 opcua</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Gentoo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
             
             <div class="clearfix"></div>
