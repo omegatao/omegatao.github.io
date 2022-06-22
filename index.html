@@ -189,6 +189,141 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-新装Ubuntu-22-04安装Nvidia-GPU版Pytorch完整教程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/22/%E6%96%B0%E8%A3%85Ubuntu-22-04%E5%AE%89%E8%A3%85Nvidia-GPU%E7%89%88Pytorch%E5%AE%8C%E6%95%B4%E6%95%99%E7%A8%8B/">新装UBUNTU 22.04安装Nvidia GPU版Pytorch完整教程</a>
+    </h1>
+  
+
+        
+        <a href="/2022/06/22/%E6%96%B0%E8%A3%85Ubuntu-22-04%E5%AE%89%E8%A3%85Nvidia-GPU%E7%89%88Pytorch%E5%AE%8C%E6%95%B4%E6%95%99%E7%A8%8B/" class="archive-article-date">
+  	<time datetime="2022-06-22T13:05:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-06-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近准备在全新安装的Ubuntu 22.04上安装使用英伟达显卡的Pytorch GPU版,但是翻了一下目前网上还时很缺少对应的完整教程,于是想着把自己的安装过程发一下共大家参考.</p>
+<h2 id="安装Nvidia私有驱动"><a href="#安装Nvidia私有驱动" class="headerlink" title="安装Nvidia私有驱动"></a>安装Nvidia私有驱动</h2><p>要使用PyTorch GPU版就必须有CUDA相关的驱动和库才行,由于UBUNTU 22.04安装好以后默认使用的是nouveau的开源驱动,因此需要先安装Nvidia的开源驱动.最方便的方法是打开下图所示的Additional Drivers应用程序</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220622192447.png" alt=""></p>
+<p>然后选择最新的Nvidia驱动即可,我安装的是510版本</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220622192617.png" alt=""></p>
+<p>选择好想要安装的驱动版本,点击Apply Changes并且在安装好后重启电脑即可.</p>
+<h2 id="安装CUDA-Toolkit-11-7"><a href="#安装CUDA-Toolkit-11-7" class="headerlink" title="安装CUDA Toolkit 11.7"></a>安装CUDA Toolkit 11.7</h2><p>在<a href="https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=22.04&target_type=runfile_local" target="_blank" rel="noopener">Nvidia 官网CUDA Toolkit下载页面 </a>按照如下方式选择对应的版本下载即可,推荐使用runfile(local)的方式进行下载和安装,这样可以节省操作步骤:</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220622193947.png" alt=""></p>
+<p>需要注意的是虽然网站给出了下载和安装的命令,但是新安装的UBUNTU是不带gcc等编译工具的,需要使用下面的命令先安装常用编译工具,防止后续步骤找不到gcc出错.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install build-essential pkg-config cmake cmake-qt-gui ninja-build valgrind</span><br></pre></td></tr></table></figure>
+
+<p>安装完常用编译工具后按照网站提示的命令进行下载和安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://developer.download.nvidia.com/compute/cuda/11.7.0/local_installers/cuda_11.7.0_515.43.04_linux.run</span><br><span class="line">sudo sh cuda_11.7.0_515.43.04_linux.run</span><br></pre></td></tr></table></figure>
+
+<p>由于我们上一步已经安装了显卡驱动,因此在提示检测到已安装驱动的页面直接点击Continue继续即可.需要注意的是,由于我们已经安装了驱动,因此就不要选择再安装这文件中代的515版驱动,否则会出错. 直接将驱动打叉然后Install安装即可.</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220622194837.png" alt=""></p>
+<p>这时你使用<code>nvcc --version</code>的命令来确认CUDA Toolkit是否安装成功的话会发现找不到对应的命令,还需要按照安装好后弹出的提示将将对应的环境变量添加到.bashrc文件.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~</span><br><span class="line">vim .bashrc</span><br></pre></td></tr></table></figure>
+
+<p>在.bashrc文件末加入下面两行后重启terminal即可.可以使用前面提到的<code>nvcc --version</code>命令来确认设置是否成功.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export PATH=/usr/local/cuda-11.7/bin:$PATH</span><br><span class="line">export LD_LIBRARY_PATH=/usr/local/cuda-11.7/lib64:$LD_LIBRARY_PATH</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装cuDNN-8-4"><a href="#安装cuDNN-8-4" class="headerlink" title="安装cuDNN 8.4"></a>安装cuDNN 8.4</h2><p>cuDNN也是到<a href="https://developer.nvidia.com/rdp/cudnn-download" target="_blank" rel="noopener">Nvidia官网cuDNN下载页面</a>进行下载即可,由于NVidia的限制,cuDNN下载前要自己注册一个Nvidia的账号并且填写一些问卷调查,弄好以后我们同样按照安装CUDA的方式进行安装,下载下图所示的版本.</p>
+<p>![image-20220622201028652](/Users/taoye/Library/Application Support/typora-user-images/image-20220622201028652.png)</p>
+<p>以上的文件需要使用浏览器直接下载,如果复制链接并使用wget下载会因为没有token导致下载失败.下载好就可以根据以下步骤进行安装:</p>
+<ol>
+<li><p>解压缩</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar  -xvf cudnn-linux-x86_64-8.4.1.50_cuda11.6-archive.tar.xz</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将解压缩后的文件分别复制到对应的cuda文件夹下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo cp cudnn-*-archive/include/cudnn*.h /usr/<span class="built_in">local</span>/cuda/include </span><br><span class="line">sudo cp -P cudnn-*-archive/lib/libcudnn* /usr/<span class="built_in">local</span>/cuda/lib64 </span><br><span class="line">sudo chmod a+r /usr/<span class="built_in">local</span>/cuda/include/cudnn*.h /usr/<span class="built_in">local</span>/cuda/lib64/libcudnn*</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>按照上面的两个步骤就已经安装好了cuDNN,如果还希望进行测试是否安装成功的话可以用官方的sample进行测试.</p>
+<h2 id="安装PyTorch-1-11-stable版"><a href="#安装PyTorch-1-11-stable版" class="headerlink" title="安装PyTorch 1.11 stable版"></a>安装PyTorch 1.11 stable版</h2><p>进入<a href="https://pytorch.org/get-started/locally/#linux-verification" target="_blank" rel="noopener">PyTorch官方安装页面</a>,按照下图所示的方式选择即可,由于我们前面安装的是CUDA11.7,这里直接选CUDA 11.3即可正常使用.</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220622205110.png" alt=""></p>
+<p>我们这里使用pip安装,直接运行页面提示的命令进行安装即可</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113</span><br></pre></td></tr></table></figure>
+
+<p>如果提示你没有pip3的话可以通过下面的命令先安装pip,在运行前面的命令安装pytorch.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install python3-pip</span><br></pre></td></tr></table></figure>
+
+<p>到这里pytorch的GPU版就安装成功了,如果想要测试可以在python环境下通过下面的程序进行判断,如果返回值为True则代表GPU加速启用成功.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line">torch.cuda.is_available()</span><br></pre></td></tr></table></figure>
+
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Ubuntu</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Linux</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Nvidia</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">cuDNN</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Pytorch</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/06/22/%E6%96%B0%E8%A3%85Ubuntu-22-04%E5%AE%89%E8%A3%85Nvidia-GPU%E7%89%88Pytorch%E5%AE%8C%E6%95%B4%E6%95%99%E7%A8%8B/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Hexo博客yilia主题下不蒜子访问统计不显示问题修复" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -955,6 +1090,26 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">访问统计</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Ubuntu</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Linux</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Nvidia</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">cuDNN</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Pytorch</a>
               </li>
             
             <div class="clearfix"></div>

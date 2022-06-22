@@ -6,14 +6,29 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://gtrush.com">
-  <title>Tag: C++ Qt open62541 opcua | GTrush的个人博客</title>
+  <title>新装UBUNTU 22.04安装Nvidia GPU版Pytorch完整教程 | GTrush的个人博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="GTrush的个人博客">
-<meta property="og:url" content="https://gtrush.com/tags/C-Qt-open62541-opcua/index.html">
+  <meta name="description" content="最近准备在全新安装的Ubuntu 22.04上安装使用英伟达显卡的Pytorch GPU版,但是翻了一下目前网上还时很缺少对应的完整教程,于是想着把自己的安装过程发一下共大家参考. 安装Nvidia私有驱动要使用PyTorch GPU版就必须有CUDA相关的驱动和库才行,由于UBUNTU 22.04安装好以后默认使用的是nouveau的开源驱动,因此需要先安装Nvidia的开源驱动.最方便的方法是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="新装UBUNTU 22.04安装Nvidia GPU版Pytorch完整教程">
+<meta property="og:url" content="https://gtrush.com/2022/06/22/%E6%96%B0%E8%A3%85Ubuntu-22-04%E5%AE%89%E8%A3%85Nvidia-GPU%E7%89%88Pytorch%E5%AE%8C%E6%95%B4%E6%95%99%E7%A8%8B/index.html">
 <meta property="og:site_name" content="GTrush的个人博客">
+<meta property="og:description" content="最近准备在全新安装的Ubuntu 22.04上安装使用英伟达显卡的Pytorch GPU版,但是翻了一下目前网上还时很缺少对应的完整教程,于是想着把自己的安装过程发一下共大家参考. 安装Nvidia私有驱动要使用PyTorch GPU版就必须有CUDA相关的驱动和库才行,由于UBUNTU 22.04安装好以后默认使用的是nouveau的开源驱动,因此需要先安装Nvidia的开源驱动.最方便的方法是">
+<meta property="og:image" content="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220622192447.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220622192617.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220622193947.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220622194837.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220622205110.png">
+<meta property="article:published_time" content="2022-06-22T13:05:53.000Z">
+<meta property="article:modified_time" content="2022-06-22T13:08:23.906Z">
 <meta property="article:author" content="GTrush">
+<meta property="article:tag" content="Ubuntu">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Nvidia">
+<meta property="article:tag" content="cuDNN">
+<meta property="article:tag" content="Pytorch">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220622192447.png">
   
     <link rel="alternative" href="/atom.xml" title="GTrush的个人博客" type="application/atom+xml">
   
@@ -187,60 +202,266 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+             <article id="post-新装Ubuntu-22-04安装Nvidia-GPU版Pytorch完整教程" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2022" class="archive-year">2022</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/01/09/Qt%E8%B0%83%E7%94%A8open62541%E7%BC%96%E5%86%99opcua%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%9C%80%E7%AE%80%E5%8D%95%E6%96%B9%E6%B3%95/" class="archive-article-date">
-  	<time datetime="2022-01-09T06:20:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-01-09</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/01/09/Qt%E8%B0%83%E7%94%A8open62541%E7%BC%96%E5%86%99opcua%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%9C%80%E7%AE%80%E5%8D%95%E6%96%B9%E6%B3%95/">Qt调用open62541编写opcua程序的最简单方法</a>
+    <h1 class="article-title" itemprop="name">
+      新装UBUNTU 22.04安装Nvidia GPU版Pytorch完整教程
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2022/06/22/%E6%96%B0%E8%A3%85Ubuntu-22-04%E5%AE%89%E8%A3%85Nvidia-GPU%E7%89%88Pytorch%E5%AE%8C%E6%95%B4%E6%95%99%E7%A8%8B/" class="archive-article-date">
+  	<time datetime="2022-06-22T13:05:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-06-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近准备在全新安装的Ubuntu 22.04上安装使用英伟达显卡的Pytorch GPU版,但是翻了一下目前网上还时很缺少对应的完整教程,于是想着把自己的安装过程发一下共大家参考.</p>
+<h2 id="安装Nvidia私有驱动"><a href="#安装Nvidia私有驱动" class="headerlink" title="安装Nvidia私有驱动"></a>安装Nvidia私有驱动</h2><p>要使用PyTorch GPU版就必须有CUDA相关的驱动和库才行,由于UBUNTU 22.04安装好以后默认使用的是nouveau的开源驱动,因此需要先安装Nvidia的开源驱动.最方便的方法是打开下图所示的Additional Drivers应用程序</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220622192447.png" alt=""></p>
+<p>然后选择最新的Nvidia驱动即可,我安装的是510版本</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220622192617.png" alt=""></p>
+<p>选择好想要安装的驱动版本,点击Apply Changes并且在安装好后重启电脑即可.</p>
+<h2 id="安装CUDA-Toolkit-11-7"><a href="#安装CUDA-Toolkit-11-7" class="headerlink" title="安装CUDA Toolkit 11.7"></a>安装CUDA Toolkit 11.7</h2><p>在<a href="https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=22.04&target_type=runfile_local" target="_blank" rel="noopener">Nvidia 官网CUDA Toolkit下载页面 </a>按照如下方式选择对应的版本下载即可,推荐使用runfile(local)的方式进行下载和安装,这样可以节省操作步骤:</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220622193947.png" alt=""></p>
+<p>需要注意的是虽然网站给出了下载和安装的命令,但是新安装的UBUNTU是不带gcc等编译工具的,需要使用下面的命令先安装常用编译工具,防止后续步骤找不到gcc出错.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install build-essential pkg-config cmake cmake-qt-gui ninja-build valgrind</span><br></pre></td></tr></table></figure>
+
+<p>安装完常用编译工具后按照网站提示的命令进行下载和安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://developer.download.nvidia.com/compute/cuda/11.7.0/local_installers/cuda_11.7.0_515.43.04_linux.run</span><br><span class="line">sudo sh cuda_11.7.0_515.43.04_linux.run</span><br></pre></td></tr></table></figure>
+
+<p>由于我们上一步已经安装了显卡驱动,因此在提示检测到已安装驱动的页面直接点击Continue继续即可.需要注意的是,由于我们已经安装了驱动,因此就不要选择再安装这文件中代的515版驱动,否则会出错. 直接将驱动打叉然后Install安装即可.</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220622194837.png" alt=""></p>
+<p>这时你使用<code>nvcc --version</code>的命令来确认CUDA Toolkit是否安装成功的话会发现找不到对应的命令,还需要按照安装好后弹出的提示将将对应的环境变量添加到.bashrc文件.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~</span><br><span class="line">vim .bashrc</span><br></pre></td></tr></table></figure>
+
+<p>在.bashrc文件末加入下面两行后重启terminal即可.可以使用前面提到的<code>nvcc --version</code>命令来确认设置是否成功.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export PATH=/usr/local/cuda-11.7/bin:$PATH</span><br><span class="line">export LD_LIBRARY_PATH=/usr/local/cuda-11.7/lib64:$LD_LIBRARY_PATH</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装cuDNN-8-4"><a href="#安装cuDNN-8-4" class="headerlink" title="安装cuDNN 8.4"></a>安装cuDNN 8.4</h2><p>cuDNN也是到<a href="https://developer.nvidia.com/rdp/cudnn-download" target="_blank" rel="noopener">Nvidia官网cuDNN下载页面</a>进行下载即可,由于NVidia的限制,cuDNN下载前要自己注册一个Nvidia的账号并且填写一些问卷调查,弄好以后我们同样按照安装CUDA的方式进行安装,下载下图所示的版本.</p>
+<p>![image-20220622201028652](/Users/taoye/Library/Application Support/typora-user-images/image-20220622201028652.png)</p>
+<p>以上的文件需要使用浏览器直接下载,如果复制链接并使用wget下载会因为没有token导致下载失败.下载好就可以根据以下步骤进行安装:</p>
+<ol>
+<li><p>解压缩</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar  -xvf cudnn-linux-x86_64-8.4.1.50_cuda11.6-archive.tar.xz</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将解压缩后的文件分别复制到对应的cuda文件夹下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo cp cudnn-*-archive/include/cudnn*.h /usr/<span class="built_in">local</span>/cuda/include </span><br><span class="line">sudo cp -P cudnn-*-archive/lib/libcudnn* /usr/<span class="built_in">local</span>/cuda/lib64 </span><br><span class="line">sudo chmod a+r /usr/<span class="built_in">local</span>/cuda/include/cudnn*.h /usr/<span class="built_in">local</span>/cuda/lib64/libcudnn*</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>按照上面的两个步骤就已经安装好了cuDNN,如果还希望进行测试是否安装成功的话可以用官方的sample进行测试.</p>
+<h2 id="安装PyTorch-1-11-stable版"><a href="#安装PyTorch-1-11-stable版" class="headerlink" title="安装PyTorch 1.11 stable版"></a>安装PyTorch 1.11 stable版</h2><p>进入<a href="https://pytorch.org/get-started/locally/#linux-verification" target="_blank" rel="noopener">PyTorch官方安装页面</a>,按照下图所示的方式选择即可,由于我们前面安装的是CUDA11.7,这里直接选CUDA 11.3即可正常使用.</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220622205110.png" alt=""></p>
+<p>我们这里使用pip安装,直接运行页面提示的命令进行安装即可</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113</span><br></pre></td></tr></table></figure>
+
+<p>如果提示你没有pip3的话可以通过下面的命令先安装pip,在运行前面的命令安装pytorch.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install python3-pip</span><br></pre></td></tr></table></figure>
+
+<p>到这里pytorch的GPU版就安装成功了,如果想要测试可以在python环境下通过下面的程序进行判断,如果返回值为True则代表GPU加速启用成功.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line">torch.cuda.is_available()</span><br></pre></td></tr></table></figure>
+
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我喝咖啡<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/assets/alipay.jpeg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/assets/wechat.jpeg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">C++ Qt open62541 opcua</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Ubuntu</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Linux</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Nvidia</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">cuDNN</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Pytorch</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a
+            class="weixin share-sns wxFab"
+            href="javascript:;"
+            data-type="weixin"
+          >
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a
+            class="facebook share-sns"
+            href="javascript:;"
+            data-type="facebook"
+          >
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+  <a class="close js-modal-close" href="javascript:;"
+    ><i class="icon icon-close"></i
+  ></a>
+  <p>扫一扫，分享到微信</p>
+  <div class="wx-qrcode">
+    <img
+      src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://www.gtrush.com/022/06/22/%E6%96%B0%E8%A3%85Ubuntu-22-04%E5%AE%89%E8%A3%85Nvidia-GPU%E7%89%88Pytorch%E5%AE%8C%E6%95%B4%E6%95%99%E7%A8%8B/"
+      alt="微信分享二维码"
+    />
+  </div>
+</div>
+
+<div class="mask js-mask"></div>
+
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2022/06/13/Hexo%E5%8D%9A%E5%AE%A2yilia%E4%B8%BB%E9%A2%98%E4%B8%8B%E4%B8%8D%E8%92%9C%E5%AD%90%E8%AE%BF%E9%97%AE%E7%BB%9F%E8%AE%A1%E4%B8%8D%E6%98%BE%E7%A4%BA%E9%97%AE%E9%A2%98%E4%BF%AE%E5%A4%8D/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Hexo博客yilia主题下不蒜子访问统计不显示问题修复</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装Nvidia私有驱动"><span class="toc-number">1.</span> <span class="toc-text">安装Nvidia私有驱动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装CUDA-Toolkit-11-7"><span class="toc-number">2.</span> <span class="toc-text">安装CUDA Toolkit 11.7</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装cuDNN-8-4"><span class="toc-number">3.</span> <span class="toc-text">安装cuDNN 8.4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装PyTorch-1-11-stable版"><span class="toc-number">4.</span> <span class="toc-text">安装PyTorch 1.11 stable版</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
+
 
 
           </div>
@@ -272,9 +493,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
