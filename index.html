@@ -189,6 +189,102 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-解决Ubuntu-22-04下pip安装软件包后无法直接使用问题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/06/22/%E8%A7%A3%E5%86%B3Ubuntu-22-04%E4%B8%8Bpip%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E5%8C%85%E5%90%8E%E6%97%A0%E6%B3%95%E7%9B%B4%E6%8E%A5%E4%BD%BF%E7%94%A8%E9%97%AE%E9%A2%98/">解决Ubuntu 22.04下pip安装软件包后无法直接使用问题</a>
+    </h1>
+  
+
+        
+        <a href="/2022/06/22/%E8%A7%A3%E5%86%B3Ubuntu-22-04%E4%B8%8Bpip%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E5%8C%85%E5%90%8E%E6%97%A0%E6%B3%95%E7%9B%B4%E6%8E%A5%E4%BD%BF%E7%94%A8%E9%97%AE%E9%A2%98/" class="archive-article-date">
+  	<time datetime="2022-06-22T13:10:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-06-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在Ubuntu 22.04中使用pip安装软件包后总是会提示’/home/xxx/.local/bin’ which is not on PATH的警告,同时比如jupyter一类的程序在安装后无法直接使用.可以通过修改.bashrc的方式进行修复.</p>
+<p><img src="https://raw.githubusercontent.com/omegatao/FigureBed/master/img/20220622210123.png" alt=""></p>
+<p>首先通过下面的命令用vim对.bashrc进行编辑 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~</span><br><span class="line">vim .bashrc</span><br></pre></td></tr></table></figure>
+
+<p>并且在.bashrc文件最后添加如下内容</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PATH="$HOME/.local/bin:$PATH"</span><br></pre></td></tr></table></figure>
+
+<p>添加完后同步配置文件即可</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> .bashrc</span><br></pre></td></tr></table></figure>
+
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Ubuntu</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Linux</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Pypi</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/06/22/%E8%A7%A3%E5%86%B3Ubuntu-22-04%E4%B8%8Bpip%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E5%8C%85%E5%90%8E%E6%97%A0%E6%B3%95%E7%9B%B4%E6%8E%A5%E4%BD%BF%E7%94%A8%E9%97%AE%E9%A2%98/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-新装Ubuntu-22-04安装Nvidia-GPU版Pytorch完整教程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1110,6 +1206,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Pytorch</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Pypi</a>
               </li>
             
             <div class="clearfix"></div>
